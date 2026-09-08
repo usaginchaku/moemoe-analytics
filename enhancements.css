@@ -69,8 +69,56 @@
   background:linear-gradient(135deg,var(--accent2),var(--accent));
   box-shadow:0 4px 12px var(--accent-soft);
 }
+
+/* Answer state is separate from the score value. */
+.score-answer-head{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:9px;
+  min-width:0;
+}
+.score-answer-head output{
+  min-width:2.2em;
+  text-align:right;
+}
+.score-row.unanswered{
+  border-style:dashed;
+}
+.score-row.unanswered .score-answer-head output{
+  min-width:auto;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+.score-row.unanswered input[type="range"]{
+  opacity:.72;
+}
+.unanswer-btn{
+  appearance:none;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--panel2);
+  color:var(--muted);
+  padding:6px 9px;
+  font:inherit;
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.unanswer-btn:active{
+  transform:translateY(1px);
+}
+.unanswer-btn.hidden{
+  display:none;
+}
+
 @media(max-width:560px){
   .profile-meta{gap:6px;margin-bottom:12px}
   .profile-meta span{font-size:11px;padding:6px 8px;border-radius:13px}
   .score-row{padding:13px 12px}
+  .score-answer-head{gap:6px}
+  .unanswer-btn{padding:6px 8px;font-size:10px}
 }
