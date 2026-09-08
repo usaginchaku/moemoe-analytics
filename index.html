@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#fff7ff" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0e0f12" media="(prefers-color-scheme: dark)" />
   <title>moemoe analytics</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./styles.css?v=20260908-1639" />
 </head>
 <body>
   <header class="app-header">
@@ -16,23 +16,18 @@
       <h1>推し4軸レーダー</h1>
       <p class="sub">「好き」を一列に並べず、キャラ愛・メロ・交際・性的魅力の4軸で眺める。</p>
     </div>
-    <div class="header-actions">
-      <button id="exportBtn" class="btn secondary">JSONを書き出す</button>
-      <label class="btn secondary file-btn">JSONを読み込む<input id="importInput" type="file" accept=".json,application/json" /></label>
-      <button id="resetBtn" class="btn ghost">初期JSONに戻す</button>
-    </div>
   </header>
 
-  <nav class="app-tabs" aria-label="画面切り替え">
-    <button class="tab-btn active" type="button" data-tab="analyze">4軸分析</button>
-    <button class="tab-btn" type="button" data-tab="help">使い方</button>
+  <nav class="app-tabs" role="tablist" aria-label="画面切り替え">
+    <button id="analyzeTabButton" class="tab-btn active" type="button" role="tab" aria-selected="true" aria-controls="analyzeTab" data-tab="analyze">4軸分析</button>
+    <button id="helpTabButton" class="tab-btn" type="button" role="tab" aria-selected="false" aria-controls="helpTab" data-tab="help">使い方</button>
   </nav>
 
-  <main>
-    <section id="analyzeTab" class="tab-page active">
+  <main class="app-main">
+    <section id="analyzeTab" class="tab-page active" role="tabpanel" aria-labelledby="analyzeTabButton">
       <div class="layout">
         <aside class="sidebar panel">
-          <details id="characterPicker" class="selection-details" open>
+          <details id="characterPicker" class="selection-details">
             <summary><span>キャラを選ぶ</span><span id="countLabel" class="count-badge">0人</span></summary>
             <div class="selection-body">
               <div class="toolbar">
@@ -55,7 +50,7 @@
         <section class="content">
           <div id="emptyState" class="panel empty-state hidden">
             <h2>キャラを追加・選択してください</h2>
-            <p>キャラ選択を開いて選ぶと、4軸レーダーと編集フォームが表示されます。</p>
+            <p>「キャラを選ぶ」を開いて選ぶと、4軸レーダーと編集フォームが表示されます。</p>
           </div>
 
           <div id="detailView" class="detail-grid hidden">
@@ -83,7 +78,7 @@
 
             <section class="panel editor-panel">
               <h3>4軸評価</h3>
-              <p class="hint">1〜10の10段階。0は未評価です。編集内容はブラウザ内に自動保存されます。性的な軸は成人キャラ／成人版想定のみ。</p>
+              <p class="hint">1〜10の10段階。0は未評価です。編集内容はこのブラウザに自動保存されます。性的な軸は成人キャラ／成人版想定のみ。</p>
               <div id="scoreControls" class="score-controls"></div>
               <div class="divider"></div>
               <div class="form-grid">
@@ -104,47 +99,58 @@
       </div>
     </section>
 
-    <section id="helpTab" class="tab-page">
+    <section id="helpTab" class="tab-page" role="tabpanel" aria-labelledby="helpTabButton" hidden>
       <article class="panel help-panel">
-        <p class="eyebrow">HOW TO USE</p>
-        <h2>使い方</h2>
-        <div class="help-grid">
-          <section>
+        <div class="help-heading">
+          <p class="eyebrow">HOW TO USE</p>
+          <h2>使い方</h2>
+          <p class="hint">基本は「キャラを選ぶ → 4軸を1〜10で付ける」だけ。入力は自動保存されます。</p>
+        </div>
+
+        <div class="help-steps">
+          <section class="help-card">
             <span class="help-number">1</span>
-            <h3>キャラを選ぶ</h3>
-            <p>「4軸分析」タブの「キャラを選ぶ」を開き、一覧からキャラを選択します。検索・作品絞り込み・並び替えもできます。選択欄は閉じて、レーダーだけ眺められます。</p>
+            <div><h3>キャラを選ぶ</h3><p>「4軸分析」タブで「キャラを選ぶ」を開き、一覧から選択します。検索・作品絞り込み・並び替えもできます。</p></div>
           </section>
-          <section>
+          <section class="help-card">
             <span class="help-number">2</span>
-            <h3>1〜10で評価する</h3>
-            <p>各スライダーを直感で動かしてください。1〜10が評価値、0はまだ評価していない状態です。入力はこのブラウザの localStorage に自動保存されます。</p>
+            <div><h3>1〜10で評価する</h3><p>4本のスライダーを直感で動かします。1〜10が評価値、0は未評価です。変更はこのブラウザの localStorage に自動保存されます。</p></div>
           </section>
-          <section>
+          <section class="help-card axis-card">
             <span class="help-number">3</span>
-            <h3>4軸の意味</h3>
-            <dl class="axis-guide">
-              <div><dt>キャラ愛</dt><dd>作品の登場人物としてどれくらい好きか。</dd></div>
-              <div><dt>メロ</dt><dd>言動・ギャップ・関係性などで「好き〜！」となる強さ。</dd></div>
-              <div><dt>交際</dt><dd>現実にいたら付き合いたい、一緒に暮らしたい度。</dd></div>
-              <div><dt>性的魅力</dt><dd>成人キャラ／成人版想定で、性的にどれくらい刺さるか。</dd></div>
-            </dl>
+            <div class="help-card-body">
+              <h3>4軸の意味</h3>
+              <dl class="axis-guide">
+                <div><dt>キャラ愛</dt><dd>作品の登場人物としてどれくらい好きか。</dd></div>
+                <div><dt>メロ</dt><dd>言動・ギャップ・関係性などで「好き〜！」となる強さ。</dd></div>
+                <div><dt>交際</dt><dd>現実にいたら付き合いたい、一緒に暮らしたい度。</dd></div>
+                <div><dt>性的魅力</dt><dd>成人キャラ／成人版想定で、性的にどれくらい刺さるか。</dd></div>
+              </dl>
+            </div>
           </section>
-          <section>
+          <section class="help-card">
             <span class="help-number">4</span>
-            <h3>画像URLは何に使う？</h3>
-            <p>入れるとキャラの画像をレーダーの上に表示できます。<strong>画像ページのURLではなく、.jpg / .png / .webp など画像そのもののURL</strong>を推奨します。サイト側が外部表示を禁止している場合は表示できません。</p>
+            <div><h3>画像URLは何に使う？</h3><p>キャラ画像をレーダーの上に表示するための欄です。画像ページではなく、<strong>.jpg / .png / .webp など画像そのもののURL</strong>を入れるのがおすすめです。外部表示を禁止しているサイトの画像は表示できません。</p></div>
           </section>
-          <section>
+          <section class="help-card">
             <span class="help-number">5</span>
-            <h3>タグとメモ</h3>
-            <p>「ギャップ萌え」「賢い」「女好き」など自由にタグを付けられます。メモには刺さった理由や夢妄想向きかどうかを書いておくと、後から性癖分析しやすくなります。</p>
-          </section>
-          <section>
-            <span class="help-number">6</span>
-            <h3>JSONでバックアップ</h3>
-            <p>「JSONを書き出す」で現在の評価を保存できます。「JSONを読み込む」で復元可能。「初期JSONに戻す」はブラウザ内の編集を破棄するので注意してください。</p>
+            <div><h3>タグとメモ</h3><p>「ギャップ萌え」「賢い」「女好き」などをタグに。メモには刺さった理由や妄想ポイントを書いておくと、あとで性癖分析しやすくなります。</p></div>
           </section>
         </div>
+
+        <section class="backup-section">
+          <div>
+            <p class="eyebrow">BACKUP</p>
+            <h3>データのバックアップ</h3>
+            <p class="hint">普段は触らなくてOK。端末変更やデータ退避をしたいときだけ使います。</p>
+          </div>
+          <div class="backup-actions">
+            <button id="exportBtn" class="btn secondary">JSONを書き出す</button>
+            <label class="btn secondary file-btn">JSONを読み込む<input id="importInput" type="file" accept=".json,application/json" /></label>
+            <button id="resetBtn" class="btn ghost">初期JSONに戻す</button>
+          </div>
+          <p class="backup-warning">「初期JSONに戻す」は、このブラウザで編集した評価を破棄します。</p>
+        </section>
       </article>
     </section>
   </main>
@@ -158,6 +164,6 @@
     </form>
   </dialog>
 
-  <script src="./app.js" defer></script>
+  <script src="./app.js?v=20260908-1639" defer></script>
 </body>
 </html>
