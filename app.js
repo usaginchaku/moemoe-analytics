@@ -12,7 +12,6 @@ function uid(){return "ch_"+Date.now().toString(36)+"_"+Math.random().toString(3
 function clamp10(v){
   let n=Number(v);
   if(!Number.isFinite(n)) n=0;
-  // 旧0〜100データは自動的に0〜10へ移行する。
   if(n>10) n=Math.round(n/10);
   return Math.max(0,Math.min(10,Math.round(n)));
 }
@@ -40,7 +39,6 @@ async function loadInitial(){
       const x=JSON.parse(saved);
       state.characters=(x.characters||[]).map(normalizeCharacter);
       state.selectedId=x.selectedId||null;
-      // 旧100点満点データを正規化した状態で保存し直す。
       persist();
     }catch(e){state.characters=structuredClone(state.baseCharacters)}
   } else state.characters=structuredClone(state.baseCharacters);
@@ -124,7 +122,7 @@ function renderImage(c){
   img.src=url;
 }
 function bindField(id,key,transform=v=>v){
-  const el=$(id); el.oninput=()=>{const c=current();if(!c)return;c[key]=transform(el.value);touch(c);renderAll(false)};
+  const el=$(id); el.oninput=()=>{const c=current();if(!c)return;c[key]=transform(el.value);touch(c);renderAll()};
 }
 function renderDetail(){
   const c=current(); $("emptyState").classList.toggle("hidden",!!c); $("detailView").classList.toggle("hidden",!c); if(!c)return;
@@ -149,9 +147,17 @@ $("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify
 $("importInput").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;try{const json=JSON.parse(await f.text());const arr=Array.isArray(json)?json:json.characters;if(!Array.isArray(arr))throw new Error("characters 配列がありません");state.characters=arr.map(normalizeCharacter);state.selectedId=state.characters[0]?.id||null;persist();renderAll()}catch(err){alert("JSONを読み込めませんでした: "+err.message)}finally{e.target.value=""}});
 
 function switchTab(name){
-  document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
-  $("analyzeTab").classList.toggle("active",name==="analyze");
-  $("helpTab").classList.toggle("active",name==="help");
+  const analyze=name==="analyze";
+  $("analyzeTab").hidden=!analyze;
+  $("helpTab").hidden=analyze;
+  $("analyzeTab").classList.toggle("active",analyze);
+  $("helpTab").classList.toggle("active",!analyze);
+  document.querySelectorAll("[data-tab]").forEach(b=>{
+    const active=b.dataset.tab===name;
+    b.classList.toggle("active",active);
+    b.setAttribute("aria-selected",String(active));
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
 
