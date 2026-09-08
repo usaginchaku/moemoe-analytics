@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0f1115" />
+  <title>moemoe analytics</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">MOEMOE ANALYTICS</p>
+      <h1>推し4軸レーダー</h1>
+      <p class="sub">「好き」を一列に並べず、キャラ愛・メロ・交際・性的魅力の4軸で眺める。</p>
+    </div>
+    <div class="header-actions">
+      <button id="exportBtn" class="btn secondary">JSONを書き出す</button>
+      <label class="btn secondary file-btn">JSONを読み込む<input id="importInput" type="file" accept=".json,application/json" /></label>
+      <button id="resetBtn" class="btn ghost">初期JSONに戻す</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar panel">
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="キャラ名・作品名・タグで検索" />
+        <select id="workFilter"><option value="">すべての作品</option></select>
+        <select id="sortSelect">
+          <option value="name">名前順</option>
+          <option value="work">作品順</option>
+          <option value="avg-desc">平均スコア高い順</option>
+          <option value="mero-desc">メロつきたい順</option>
+          <option value="date-desc">更新が新しい順</option>
+        </select>
+      </div>
+      <div class="list-meta"><span id="countLabel">0人</span><button id="addBtn" class="text-btn">＋ キャラ追加</button></div>
+      <div id="characterList" class="character-list"></div>
+    </aside>
+
+    <section class="content">
+      <div id="emptyState" class="panel empty-state hidden">
+        <h2>キャラを追加・選択してください</h2>
+        <p>左の一覧から選ぶと、4軸レーダーと編集フォームが表示されます。</p>
+      </div>
+
+      <div id="detailView" class="detail-grid hidden">
+        <section class="panel profile-panel">
+          <div class="profile-head">
+            <div><p id="workLabel" class="eyebrow"></p><h2 id="nameLabel"></h2></div>
+            <div class="mini-actions">
+              <button id="duplicateBtn" class="icon-btn">複製</button>
+              <button id="deleteBtn" class="icon-btn danger">削除</button>
+            </div>
+          </div>
+          <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 440 440" role="img" aria-label="4軸レーダーチャート"></svg></div>
+          <div class="score-summary">
+            <div><span>平均</span><strong id="avgScore">0</strong></div>
+            <div><span>最高</span><strong id="maxAxis">—</strong></div>
+            <div><span>傾向</span><strong id="typeLabel">—</strong></div>
+          </div>
+        </section>
+
+        <section class="panel editor-panel">
+          <h3>4軸評価</h3>
+          <p class="hint">0〜100。編集内容はブラウザ内に自動保存されます。性的な軸は成人キャラ／成人版想定のみ。</p>
+          <div id="scoreControls" class="score-controls"></div>
+          <div class="divider"></div>
+          <div class="form-grid">
+            <label>キャラ名<input id="nameInput" type="text" /></label>
+            <label>作品<input id="workInput" type="text" /></label>
+            <label>タグ<input id="tagsInput" type="text" placeholder="例: ギャップ萌え, 賢い, 女好き" /></label>
+            <label>画像URL（任意）<input id="imageInput" type="url" placeholder="https://..." /></label>
+          </div>
+          <label class="notes-label">メモ<textarea id="notesInput" rows="7" placeholder="なぜ刺さるか、夢向きか、萌えポイントなど"></textarea></label>
+          <div class="divider"></div>
+          <details><summary>JSONプレビュー</summary><pre id="jsonPreview"></pre></details>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="addDialog">
+    <form method="dialog" id="addForm">
+      <h3>キャラを追加</h3>
+      <label>キャラ名<input id="addName" required /></label>
+      <label>作品<input id="addWork" required /></label>
+      <div class="dialog-actions"><button value="cancel" class="btn ghost">キャンセル</button><button value="default" id="addSubmit" class="btn">追加</button></div>
+    </form>
+  </dialog>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
