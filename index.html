@@ -9,7 +9,7 @@
   <title>moemoe analytics</title>
   <link rel="stylesheet" href="./styles.css?v=20260908-1702" />
   <link rel="stylesheet" href="./summary-layout.css?v=20260908-1708" />
-  <link rel="stylesheet" href="./enhancements.css?v=20260908-1748" />
+  <link rel="stylesheet" href="./enhancements.css?v=20260908-1802" />
 </head>
 <body>
   <header class="app-header">
@@ -35,6 +35,11 @@
               <div class="toolbar">
                 <input id="searchInput" type="search" placeholder="キャラ名・作品名・タグ・CVで検索" />
                 <select id="workFilter"><option value="">すべての作品</option></select>
+                <select id="answerFilter" aria-label="回答状況で絞り込み">
+                  <option value="">すべての回答状況</option>
+                  <option value="answered">回答済み</option>
+                  <option value="unanswered">未回答あり</option>
+                </select>
                 <select id="sortSelect">
                   <option value="name">名前順</option>
                   <option value="work">作品順</option>
@@ -76,7 +81,7 @@
 
               <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 440 440" role="img" aria-label="4軸レーダーチャート"></svg></div>
               <div class="score-summary">
-                <div><span>平均</span><strong id="avgScore">0</strong></div>
+                <div><span>平均</span><strong id="avgScore">—</strong></div>
                 <div><span>最高</span><strong id="maxAxis">—</strong></div>
                 <div><span>傾向</span><strong id="typeLabel">—</strong></div>
               </div>
@@ -84,7 +89,7 @@
 
             <section class="panel editor-panel">
               <h3>4軸評価</h3>
-              <p class="hint">1〜10の10段階。0は未評価です。編集内容はこのブラウザに自動保存されます。性的な軸は成人キャラ／成人版想定のみ。</p>
+              <p class="hint">0〜10で評価。未回答は数値とは別に管理します。0も正式な回答です。スライダーに触れると回答済みになり、「未回答に戻す」で解除できます。</p>
               <div id="scoreControls" class="score-controls"></div>
               <div class="divider"></div>
 
@@ -116,17 +121,17 @@
         <div class="help-heading">
           <p class="eyebrow">HOW TO USE</p>
           <h2>使い方</h2>
-          <p class="hint">基本は「キャラを選ぶ → 4軸を1〜10で付ける」だけ。入力は自動保存されます。</p>
+          <p class="hint">基本は「キャラを選ぶ → 4軸を0〜10で付ける」だけ。入力は自動保存されます。</p>
         </div>
 
         <div class="help-steps">
           <section class="help-card">
             <span class="help-number">1</span>
-            <div><h3>キャラを選ぶ</h3><p>「4軸分析」タブで「キャラを選ぶ」を開き、一覧から選択します。検索・作品絞り込み・並び替えもできます。</p></div>
+            <div><h3>キャラを選ぶ</h3><p>「4軸分析」タブで「キャラを選ぶ」を開き、一覧から選択します。検索・作品・回答状況の絞り込み、並び替えもできます。</p></div>
           </section>
           <section class="help-card">
             <span class="help-number">2</span>
-            <div><h3>1〜10で評価する</h3><p>4本のスライダーを直感で動かします。1〜10が評価値、0は未評価です。変更はこのブラウザの localStorage に自動保存されます。</p></div>
+            <div><h3>0〜10で評価する</h3><p>4本のスライダーを直感で動かします。0も正式な評価値です。「未回答」は数値と別の状態で管理し、4軸すべて入力したキャラだけが「回答済み」になります。1軸でも未入力なら「未回答あり」です。</p></div>
           </section>
           <section class="help-card axis-card">
             <span class="help-number">3</span>
@@ -181,5 +186,6 @@
   </dialog>
 
   <script src="./app.js?v=20260908-1748" defer></script>
+  <script src="./answer-state.js?v=20260908-1802" defer></script>
 </body>
 </html>
