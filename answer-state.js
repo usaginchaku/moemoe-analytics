@@ -208,6 +208,23 @@
     if(changed) persist();
   }
 
+  function syncBaseImages(){
+    if(!state.baseCharacters.length || !state.characters.length) return false;
+    const baseMap = new Map(state.baseCharacters.map(c => [canonicalName(c.name), c]));
+    let changed = false;
+    for(const c of state.characters){
+      const base = baseMap.get(canonicalName(c.name));
+      if(!base) continue;
+      const currentUrl = String(c.imageUrl || "").trim();
+      const baseUrl = String(base.imageUrl || "").trim();
+      if(!currentUrl && baseUrl){
+        c.imageUrl = baseUrl;
+        changed = true;
+      }
+    }
+    return changed;
+  }
+
   const answerFilter = document.getElementById("answerFilter");
   if(answerFilter) answerFilter.addEventListener("change", renderList);
 
@@ -216,8 +233,15 @@
     el.textContent = "0〜10で評価。未回答は数値とは別に管理します。0も正式な回答です。スライダーに触れると回答済みになり、『未回答に戻す』で解除できます。";
   });
 
+  let syncAttempts = 0;
   const sync = () => {
+    if(!state.baseCharacters.length && syncAttempts++ < 40){
+      setTimeout(sync, 100);
+      return;
+    }
     migrateCurrentState();
+    const imagesChanged = syncBaseImages();
+    if(imagesChanged) persist();
     if(state.characters.length) renderAll();
   };
   setTimeout(sync, 0);
