@@ -105,21 +105,48 @@ function renderSummary(c){
   $("maxAxis").textContent=`${max.short} ${c.scores[max.key]}`; $("typeLabel").textContent=typeLabel(c);
 }
 function renderJson(c){$("jsonPreview").textContent=JSON.stringify(c,null,2)}
+
+function resolveImageUrl(raw){
+  const value=String(raw||"").trim();
+  if(!value)return "";
+  try{
+    const u=new URL(value);
+    if(u.hostname.toLowerCase().endsWith(".fandom.com")){
+      const file=u.searchParams.get("file");
+      if(file){
+        const wikiPos=u.pathname.indexOf("/wiki/");
+        const prefix=wikiPos>=0?u.pathname.slice(0,wikiPos):"";
+        return `${u.origin}${prefix}/wiki/Special:Redirect/file/${encodeURIComponent(file).replace(/%2F/gi,"/")}`;
+      }
+      const decodedPath=decodeURIComponent(u.pathname);
+      const fileMatch=decodedPath.match(/\/wiki\/(?:File:|ファイル:)(.+)$/i);
+      if(fileMatch){
+        const wikiPos=u.pathname.indexOf("/wiki/");
+        const prefix=wikiPos>=0?u.pathname.slice(0,wikiPos):"";
+        return `${u.origin}${prefix}/wiki/Special:Redirect/file/${encodeURIComponent(fileMatch[1]).replace(/%2F/gi,"/")}`;
+      }
+    }
+  }catch(e){console.warn("画像URLを解釈できません",e)}
+  return value;
+}
+
 function renderImage(c){
   const wrap=$("imagePreviewWrap"), img=$("characterImage"), err=$("imageError");
-  const url=c.imageUrl.trim();
-  if(!url){
+  const rawUrl=c.imageUrl.trim();
+  if(!rawUrl){
     wrap.classList.add("hidden");
     img.removeAttribute("src");
     err.classList.add("hidden");
     return;
   }
+  const displayUrl=resolveImageUrl(rawUrl);
   wrap.classList.remove("hidden");
   err.classList.add("hidden");
   img.alt=`${c.name} の画像`;
+  img.referrerPolicy="no-referrer";
   img.onload=()=>err.classList.add("hidden");
   img.onerror=()=>err.classList.remove("hidden");
-  img.src=url;
+  img.src=displayUrl;
 }
 function bindField(id,key,transform=v=>v){
   const el=$(id); el.oninput=()=>{const c=current();if(!c)return;c[key]=transform(el.value);touch(c);renderAll()};
