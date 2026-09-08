@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#fff7ff" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0e0f12" media="(prefers-color-scheme: dark)" />
   <title>moemoe analytics</title>
-  <link rel="stylesheet" href="./styles.css?v=20260908-1639" />
+  <link rel="stylesheet" href="./styles.css?v=20260908-1702" />
 </head>
 <body>
   <header class="app-header">
@@ -64,8 +64,8 @@
               </div>
 
               <figure id="imagePreviewWrap" class="character-image-wrap hidden">
-                <img id="characterImage" alt="" loading="lazy" />
-                <figcaption id="imageError" class="image-error hidden">画像を表示できません。画像そのもののURLか確認してください。</figcaption>
+                <img id="characterImage" alt="" loading="lazy" referrerpolicy="no-referrer" />
+                <figcaption id="imageError" class="image-error hidden">画像を表示できません。Fandomの画像ページURLは自動変換しますが、表示できない場合は画像ファイルの直URLを使ってください。</figcaption>
               </figure>
 
               <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 440 440" role="img" aria-label="4軸レーダーチャート"></svg></div>
@@ -87,7 +87,7 @@
                 <label>タグ<input id="tagsInput" type="text" placeholder="例: ギャップ萌え, 賢い, 女好き" /></label>
                 <label>画像URL（任意）
                   <input id="imageInput" type="url" placeholder="https://.../character.webp" />
-                  <small>画像ファイルの直URLを入れると、レーダー上に顔・立ち絵を表示します。</small>
+                  <small>Fandomの「?file=画像名」付きページURLにも対応。その他は画像ファイルの直URL推奨です。</small>
                 </label>
               </div>
               <label class="notes-label">メモ<textarea id="notesInput" rows="7" placeholder="なぜ刺さるか、夢向きか、萌えポイントなど"></textarea></label>
@@ -130,7 +130,7 @@
           </section>
           <section class="help-card">
             <span class="help-number">4</span>
-            <div><h3>画像URLは何に使う？</h3><p>キャラ画像をレーダーの上に表示するための欄です。画像ページではなく、<strong>.jpg / .png / .webp など画像そのもののURL</strong>を入れるのがおすすめです。外部表示を禁止しているサイトの画像は表示できません。</p></div>
+            <div><h3>画像URLは何に使う？</h3><p>キャラ画像をレーダーの上に表示するための欄です。<strong>Fandomは「?file=画像名」付きのキャラページURLをそのまま入れてOK</strong>。アプリ側で画像URLへ変換します。その他のサイトは .jpg / .png / .webp など画像そのもののURLを推奨します。</p></div>
           </section>
           <section class="help-card">
             <span class="help-number">5</span>
@@ -164,6 +164,6 @@
     </form>
   </dialog>
 
-  <script src="./app.js?v=20260908-1639" defer></script>
+  <script src="./app.js?v=20260908-1702" defer></script>
 </body>
 </html>
