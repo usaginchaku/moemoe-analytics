@@ -9,6 +9,7 @@
   <title>moemoe analytics</title>
   <link rel="stylesheet" href="./styles.css?v=20260908-1702" />
   <link rel="stylesheet" href="./summary-layout.css?v=20260908-1708" />
+  <link rel="stylesheet" href="./enhancements.css?v=20260908-1748" />
 </head>
 <body>
   <header class="app-header">
@@ -32,13 +33,15 @@
             <summary><span>キャラを選ぶ</span><span id="countLabel" class="count-badge">0人</span></summary>
             <div class="selection-body">
               <div class="toolbar">
-                <input id="searchInput" type="search" placeholder="キャラ名・作品名・タグで検索" />
+                <input id="searchInput" type="search" placeholder="キャラ名・作品名・タグ・CVで検索" />
                 <select id="workFilter"><option value="">すべての作品</option></select>
                 <select id="sortSelect">
                   <option value="name">名前順</option>
                   <option value="work">作品順</option>
                   <option value="avg-desc">平均スコア高い順</option>
                   <option value="mero-desc">メロつきたい順</option>
+                  <option value="height-desc">身長が高い順</option>
+                  <option value="height-asc">身長が低い順</option>
                   <option value="date-desc">更新が新しい順</option>
                 </select>
               </div>
@@ -64,6 +67,8 @@
                 </div>
               </div>
 
+              <div id="profileMeta" class="profile-meta hidden"></div>
+
               <figure id="imagePreviewWrap" class="character-image-wrap hidden">
                 <img id="characterImage" alt="" loading="lazy" referrerpolicy="no-referrer" />
                 <figcaption id="imageError" class="image-error hidden">画像を表示できません。Fandomの画像ページURLは自動変換しますが、表示できない場合は画像ファイルの直URLを使ってください。</figcaption>
@@ -82,15 +87,21 @@
               <p class="hint">1〜10の10段階。0は未評価です。編集内容はこのブラウザに自動保存されます。性的な軸は成人キャラ／成人版想定のみ。</p>
               <div id="scoreControls" class="score-controls"></div>
               <div class="divider"></div>
+
               <div class="form-grid">
                 <label>キャラ名<input id="nameInput" type="text" /></label>
                 <label>作品<input id="workInput" type="text" /></label>
+                <label>シリーズ・区分<input id="seriesInput" type="text" placeholder="例: 5部 / モンド / 青獅子の学級" /></label>
+                <label>声優<input id="voiceActorInput" type="text" placeholder="日本語CV" /></label>
+                <label>身長（比較用cm）<input id="heightCmInput" type="number" inputmode="decimal" step="0.1" min="0" placeholder="例: 185" /></label>
+                <label>身長表記<input id="heightTextInput" type="text" placeholder="例: 185cm（アニメ設定）" /></label>
                 <label>タグ<input id="tagsInput" type="text" placeholder="例: ギャップ萌え, 賢い, 女好き" /></label>
                 <label>画像URL（任意）
                   <input id="imageInput" type="url" placeholder="https://.../character.webp" />
                   <small>Fandomの「?file=画像名」付きページURLにも対応。その他は画像ファイルの直URL推奨です。</small>
                 </label>
               </div>
+
               <label class="notes-label">メモ<textarea id="notesInput" rows="7" placeholder="なぜ刺さるか、夢向きか、萌えポイントなど"></textarea></label>
               <div class="divider"></div>
               <details><summary>JSONプレビュー</summary><pre id="jsonPreview"></pre></details>
@@ -131,10 +142,14 @@
           </section>
           <section class="help-card">
             <span class="help-number">4</span>
-            <div><h3>画像URLは何に使う？</h3><p>キャラ画像をレーダーの上に表示するための欄です。<strong>Fandomは「?file=画像名」付きのキャラページURLをそのまま入れてOK</strong>。アプリ側で画像URLへ変換します。その他のサイトは .jpg / .png / .webp など画像そのもののURLを推奨します。</p></div>
+            <div><h3>画像URLは何に使う？</h3><p>キャラ画像をレーダーの上に表示するための欄です。<strong>Fandomは「?file=画像名」付きのキャラページURLをそのまま入れてOK</strong>。その他のサイトは画像そのもののURLを推奨します。</p></div>
           </section>
           <section class="help-card">
             <span class="help-number">5</span>
+            <div><h3>身長・声優も記録</h3><p>身長は比較用の数値と表示用テキストを分けて保存します。複数設定がある場合はアニメ設定を優先。声優も検索対象になるので、後から「このCVのキャラ好き多くない？」も見つけやすくなります。</p></div>
+          </section>
+          <section class="help-card">
+            <span class="help-number">6</span>
             <div><h3>タグとメモ</h3><p>「ギャップ萌え」「賢い」「女好き」などをタグに。メモには刺さった理由や妄想ポイントを書いておくと、あとで性癖分析しやすくなります。</p></div>
           </section>
         </div>
@@ -165,6 +180,6 @@
     </form>
   </dialog>
 
-  <script src="./app.js?v=20260908-1721" defer></script>
+  <script src="./app.js?v=20260908-1748" defer></script>
 </body>
 </html>
