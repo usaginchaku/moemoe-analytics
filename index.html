@@ -23,62 +23,129 @@
     </div>
   </header>
 
-  <main class="layout">
-    <aside class="sidebar panel">
-      <div class="toolbar">
-        <input id="searchInput" type="search" placeholder="キャラ名・作品名・タグで検索" />
-        <select id="workFilter"><option value="">すべての作品</option></select>
-        <select id="sortSelect">
-          <option value="name">名前順</option>
-          <option value="work">作品順</option>
-          <option value="avg-desc">平均スコア高い順</option>
-          <option value="mero-desc">メロつきたい順</option>
-          <option value="date-desc">更新が新しい順</option>
-        </select>
-      </div>
-      <div class="list-meta"><span id="countLabel">0人</span><button id="addBtn" class="text-btn">＋ キャラ追加</button></div>
-      <div id="characterList" class="character-list"></div>
-    </aside>
+  <nav class="app-tabs" aria-label="画面切り替え">
+    <button class="tab-btn active" type="button" data-tab="analyze">4軸分析</button>
+    <button class="tab-btn" type="button" data-tab="help">使い方</button>
+  </nav>
 
-    <section class="content">
-      <div id="emptyState" class="panel empty-state hidden">
-        <h2>キャラを追加・選択してください</h2>
-        <p>左の一覧から選ぶと、4軸レーダーと編集フォームが表示されます。</p>
-      </div>
-
-      <div id="detailView" class="detail-grid hidden">
-        <section class="panel profile-panel">
-          <div class="profile-head">
-            <div><p id="workLabel" class="eyebrow"></p><h2 id="nameLabel"></h2></div>
-            <div class="mini-actions">
-              <button id="duplicateBtn" class="icon-btn">複製</button>
-              <button id="deleteBtn" class="icon-btn danger">削除</button>
+  <main>
+    <section id="analyzeTab" class="tab-page active">
+      <div class="layout">
+        <aside class="sidebar panel">
+          <details id="characterPicker" class="selection-details" open>
+            <summary><span>キャラを選ぶ</span><span id="countLabel" class="count-badge">0人</span></summary>
+            <div class="selection-body">
+              <div class="toolbar">
+                <input id="searchInput" type="search" placeholder="キャラ名・作品名・タグで検索" />
+                <select id="workFilter"><option value="">すべての作品</option></select>
+                <select id="sortSelect">
+                  <option value="name">名前順</option>
+                  <option value="work">作品順</option>
+                  <option value="avg-desc">平均スコア高い順</option>
+                  <option value="mero-desc">メロつきたい順</option>
+                  <option value="date-desc">更新が新しい順</option>
+                </select>
+              </div>
+              <div class="list-meta"><span>一覧</span><button id="addBtn" class="text-btn">＋ キャラ追加</button></div>
+              <div id="characterList" class="character-list"></div>
             </div>
-          </div>
-          <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 440 440" role="img" aria-label="4軸レーダーチャート"></svg></div>
-          <div class="score-summary">
-            <div><span>平均</span><strong id="avgScore">0</strong></div>
-            <div><span>最高</span><strong id="maxAxis">—</strong></div>
-            <div><span>傾向</span><strong id="typeLabel">—</strong></div>
-          </div>
-        </section>
+          </details>
+        </aside>
 
-        <section class="panel editor-panel">
-          <h3>4軸評価</h3>
-          <p class="hint">0〜100。編集内容はブラウザ内に自動保存されます。性的な軸は成人キャラ／成人版想定のみ。</p>
-          <div id="scoreControls" class="score-controls"></div>
-          <div class="divider"></div>
-          <div class="form-grid">
-            <label>キャラ名<input id="nameInput" type="text" /></label>
-            <label>作品<input id="workInput" type="text" /></label>
-            <label>タグ<input id="tagsInput" type="text" placeholder="例: ギャップ萌え, 賢い, 女好き" /></label>
-            <label>画像URL（任意）<input id="imageInput" type="url" placeholder="https://..." /></label>
+        <section class="content">
+          <div id="emptyState" class="panel empty-state hidden">
+            <h2>キャラを追加・選択してください</h2>
+            <p>キャラ選択を開いて選ぶと、4軸レーダーと編集フォームが表示されます。</p>
           </div>
-          <label class="notes-label">メモ<textarea id="notesInput" rows="7" placeholder="なぜ刺さるか、夢向きか、萌えポイントなど"></textarea></label>
-          <div class="divider"></div>
-          <details><summary>JSONプレビュー</summary><pre id="jsonPreview"></pre></details>
+
+          <div id="detailView" class="detail-grid hidden">
+            <section class="panel profile-panel">
+              <div class="profile-head">
+                <div><p id="workLabel" class="eyebrow"></p><h2 id="nameLabel"></h2></div>
+                <div class="mini-actions">
+                  <button id="duplicateBtn" class="icon-btn">複製</button>
+                  <button id="deleteBtn" class="icon-btn danger">削除</button>
+                </div>
+              </div>
+
+              <figure id="imagePreviewWrap" class="character-image-wrap hidden">
+                <img id="characterImage" alt="" loading="lazy" />
+                <figcaption id="imageError" class="image-error hidden">画像を表示できません。画像そのもののURLか確認してください。</figcaption>
+              </figure>
+
+              <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 440 440" role="img" aria-label="4軸レーダーチャート"></svg></div>
+              <div class="score-summary">
+                <div><span>平均</span><strong id="avgScore">0</strong></div>
+                <div><span>最高</span><strong id="maxAxis">—</strong></div>
+                <div><span>傾向</span><strong id="typeLabel">—</strong></div>
+              </div>
+            </section>
+
+            <section class="panel editor-panel">
+              <h3>4軸評価</h3>
+              <p class="hint">0〜10の11段階。編集内容はブラウザ内に自動保存されます。性的な軸は成人キャラ／成人版想定のみ。</p>
+              <div id="scoreControls" class="score-controls"></div>
+              <div class="divider"></div>
+              <div class="form-grid">
+                <label>キャラ名<input id="nameInput" type="text" /></label>
+                <label>作品<input id="workInput" type="text" /></label>
+                <label>タグ<input id="tagsInput" type="text" placeholder="例: ギャップ萌え, 賢い, 女好き" /></label>
+                <label>画像URL（任意）
+                  <input id="imageInput" type="url" placeholder="https://.../character.webp" />
+                  <small>画像ファイルの直URLを入れると、レーダー上に顔・立ち絵を表示します。</small>
+                </label>
+              </div>
+              <label class="notes-label">メモ<textarea id="notesInput" rows="7" placeholder="なぜ刺さるか、夢向きか、萌えポイントなど"></textarea></label>
+              <div class="divider"></div>
+              <details><summary>JSONプレビュー</summary><pre id="jsonPreview"></pre></details>
+            </section>
+          </div>
         </section>
       </div>
+    </section>
+
+    <section id="helpTab" class="tab-page">
+      <article class="panel help-panel">
+        <p class="eyebrow">HOW TO USE</p>
+        <h2>使い方</h2>
+        <div class="help-grid">
+          <section>
+            <span class="help-number">1</span>
+            <h3>キャラを選ぶ</h3>
+            <p>「4軸分析」タブの「キャラを選ぶ」を開き、一覧からキャラを選択します。検索・作品絞り込み・並び替えもできます。選択欄は閉じて、レーダーだけ眺められます。</p>
+          </section>
+          <section>
+            <span class="help-number">2</span>
+            <h3>0〜10で評価する</h3>
+            <p>各スライダーを直感で動かしてください。細かく悩まなくてOKです。入力はこのブラウザの localStorage に自動保存されます。</p>
+          </section>
+          <section>
+            <span class="help-number">3</span>
+            <h3>4軸の意味</h3>
+            <dl class="axis-guide">
+              <div><dt>キャラ愛</dt><dd>作品の登場人物としてどれくらい好きか。</dd></div>
+              <div><dt>メロ</dt><dd>言動・ギャップ・関係性などで「好き〜！」となる強さ。</dd></div>
+              <div><dt>交際</dt><dd>現実にいたら付き合いたい、一緒に暮らしたい度。</dd></div>
+              <div><dt>性的魅力</dt><dd>成人キャラ／成人版想定で、性的にどれくらい刺さるか。</dd></div>
+            </dl>
+          </section>
+          <section>
+            <span class="help-number">4</span>
+            <h3>画像URLは何に使う？</h3>
+            <p>入れるとキャラの画像をレーダーの上に表示できます。<strong>画像ページのURLではなく、.jpg / .png / .webp など画像そのもののURL</strong>を推奨します。サイト側が外部表示を禁止している場合は表示できません。</p>
+          </section>
+          <section>
+            <span class="help-number">5</span>
+            <h3>タグとメモ</h3>
+            <p>「ギャップ萌え」「賢い」「女好き」など自由にタグを付けられます。メモには刺さった理由や夢妄想向きかどうかを書いておくと、後から性癖分析しやすくなります。</p>
+          </section>
+          <section>
+            <span class="help-number">6</span>
+            <h3>JSONでバックアップ</h3>
+            <p>「JSONを書き出す」で現在の評価を保存できます。「JSONを読み込む」で復元可能。「初期JSONに戻す」はブラウザ内の編集を破棄するので注意してください。</p>
+          </section>
+        </div>
+      </article>
     </section>
   </main>
 
