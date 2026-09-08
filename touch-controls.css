@@ -1,0 +1,62 @@
+/* Touch-friendly score sliders: easier to grab on phones / with long nails. */
+.score-row input[type="range"]{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:44px;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  cursor:pointer;
+}
+
+.score-row input[type="range"]::-webkit-slider-runnable-track{
+  height:12px;
+  border-radius:999px;
+  background:var(--meter-bg);
+  border:1px solid var(--line);
+  box-shadow:inset 0 1px 2px rgba(75,45,85,.08);
+}
+
+.score-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:34px;
+  height:34px;
+  margin-top:-12px;
+  border-radius:50%;
+  border:3px solid var(--panel-solid);
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  box-shadow:0 3px 10px var(--accent-soft),0 0 0 1px var(--accent);
+}
+
+.score-row input[type="range"]:active::-webkit-slider-thumb{
+  transform:scale(1.08);
+  box-shadow:0 4px 14px var(--accent-soft),0 0 0 5px var(--accent-soft);
+}
+
+.score-row input[type="range"]::-moz-range-track{
+  height:12px;
+  border-radius:999px;
+  background:var(--meter-bg);
+  border:1px solid var(--line);
+}
+
+.score-row input[type="range"]::-moz-range-thumb{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:3px solid var(--panel-solid);
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  box-shadow:0 3px 10px var(--accent-soft),0 0 0 1px var(--accent);
+}
+
+.score-row input[type="range"]:focus-visible{
+  outline:none;
+}
+
+.score-row input[type="range"]:focus-visible::-webkit-slider-thumb{
+  box-shadow:0 3px 10px var(--accent-soft),0 0 0 5px var(--accent-soft);
+}
