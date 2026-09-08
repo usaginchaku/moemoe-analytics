@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./styles.css?v=20260908-1702" />
   <link rel="stylesheet" href="./summary-layout.css?v=20260908-1708" />
   <link rel="stylesheet" href="./enhancements.css?v=20260908-1802" />
+  <link rel="stylesheet" href="./analytics.css?v=20260908-1820" />
 </head>
 <body>
   <header class="app-header">
@@ -22,6 +23,7 @@
 
   <nav class="app-tabs" role="tablist" aria-label="画面切り替え">
     <button id="analyzeTabButton" class="tab-btn active" type="button" role="tab" aria-selected="true" aria-controls="analyzeTab" data-tab="analyze">4軸分析</button>
+    <button id="analyticsTabButton" class="tab-btn" type="button" role="tab" aria-selected="false" aria-controls="analyticsTab">分析</button>
     <button id="helpTabButton" class="tab-btn" type="button" role="tab" aria-selected="false" aria-controls="helpTab" data-tab="help">使い方</button>
   </nav>
 
@@ -116,6 +118,12 @@
       </div>
     </section>
 
+    <section id="analyticsTab" class="tab-page" role="tabpanel" aria-labelledby="analyticsTabButton" hidden>
+      <article class="analytics-shell">
+        <div id="analyticsRoot"></div>
+      </article>
+    </section>
+
     <section id="helpTab" class="tab-page" role="tabpanel" aria-labelledby="helpTabButton" hidden>
       <article class="panel help-panel">
         <div class="help-heading">
@@ -147,14 +155,18 @@
           </section>
           <section class="help-card">
             <span class="help-number">4</span>
-            <div><h3>画像URLは何に使う？</h3><p>キャラ画像をレーダーの上に表示するための欄です。<strong>Fandomは「?file=画像名」付きのキャラページURLをそのまま入れてOK</strong>。その他のサイトは画像そのもののURLを推奨します。</p></div>
+            <div><h3>分析タブを見る</h3><p>4軸ランキング・スコア分布・タグ・声優・身長・作品別傾向・4軸のズレを自動集計します。分析には4軸すべて回答済みのキャラだけを使います。</p></div>
           </section>
           <section class="help-card">
             <span class="help-number">5</span>
-            <div><h3>身長・声優も記録</h3><p>身長は比較用の数値と表示用テキストを分けて保存します。複数設定がある場合はアニメ設定を優先。声優も検索対象になるので、後から「このCVのキャラ好き多くない？」も見つけやすくなります。</p></div>
+            <div><h3>画像URLは何に使う？</h3><p>キャラ画像をレーダーの上に表示するための欄です。<strong>Fandomは「?file=画像名」付きのキャラページURLをそのまま入れてOK</strong>。その他のサイトは画像そのもののURLを推奨します。</p></div>
           </section>
           <section class="help-card">
             <span class="help-number">6</span>
+            <div><h3>身長・声優も記録</h3><p>身長は比較用の数値と表示用テキストを分けて保存します。複数設定がある場合はアニメ設定を優先。声優も検索対象になるので、後から「このCVのキャラ好き多くない？」も見つけやすくなります。</p></div>
+          </section>
+          <section class="help-card">
+            <span class="help-number">7</span>
             <div><h3>タグとメモ</h3><p>「ギャップ萌え」「賢い」「女好き」などをタグに。メモには刺さった理由や妄想ポイントを書いておくと、あとで性癖分析しやすくなります。</p></div>
           </section>
         </div>
@@ -187,5 +199,6 @@
 
   <script src="./app.js?v=20260908-1748" defer></script>
   <script src="./answer-state.js?v=20260908-1802" defer></script>
+  <script src="./analytics.js?v=20260908-1820" defer></script>
 </body>
 </html>
