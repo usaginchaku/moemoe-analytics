@@ -87,13 +87,45 @@ function renderRadar(c){
   AXES.forEach((a,i)=>{const [x,y]=radarPoint(i,c.scores[a.key],R);const [lx,ly]=radarPoint(i,11.8,R);let anchor="middle";if(i===1)anchor="start";if(i===3)anchor="end";html+=`<circle class="radar-dot" cx="${x}" cy="${y}" r="5"/><text class="radar-label" x="${lx}" y="${ly}" text-anchor="${anchor}">${a.short}</text><text class="radar-value" x="${lx}" y="${ly+18}" text-anchor="${anchor}">${c.scores[a.key]}</text>`});
   svg.innerHTML=html;
 }
+
 function typeLabel(c){
   const s=c.scores;
-  if(Math.max(...Object.values(s))<2.5)return "未評価";
-  if(s.mero>=7.5&&s.sexual>=7.5)return "メロ×性的魅力";
-  if(s.dating>=7.5&&s.mero>=6.5)return "恋愛本命";
-  if(s.character>=8&&s.mero<6)return "キャラ愛強め";
-  const max=AXES.reduce((best,a)=>s[a.key]>s[best.key]?a:best,AXES[0]);return `${max.short}強め`;
+  const values=AXES.map(a=>s[a.key]);
+  if(values.every(v=>v===0))return "未評価";
+
+  const high=AXES.filter(a=>s[a.key]>=8).map(a=>a.key);
+  const has=(...keys)=>keys.every(k=>high.includes(k));
+
+  if(values.every(v=>v===10))return "完全どストライク";
+  if(values.every(v=>v>=9))return "全方位どストライク";
+  if(values.every(v=>v>=8))return "全方位本命";
+
+  if(high.length===3){
+    if(has("character","mero","dating"))return "推し兼恋愛本命";
+    if(has("character","mero","sexual"))return "推し×メロ×性的魅力";
+    if(has("character","dating","sexual"))return "推し兼理想の恋人";
+    if(has("mero","dating","sexual"))return "リアコ×性的魅力";
+  }
+
+  if(high.length===2){
+    if(has("character","mero"))return "推しメロ";
+    if(has("character","dating"))return "推し兼恋人候補";
+    if(has("character","sexual"))return "推し×性的魅力";
+    if(has("mero","dating"))return "恋愛本命";
+    if(has("mero","sexual"))return "メロ×性的魅力";
+    if(has("dating","sexual"))return "交際×性的魅力";
+  }
+
+  if(high.length===1){
+    return ({character:"キャラ愛特化",mero:"メロ特化",dating:"交際本命",sexual:"性的魅力特化"})[high[0]];
+  }
+
+  const ranked=[...AXES].sort((a,b)=>s[b.key]-s[a.key]);
+  const top=ranked[0],second=ranked[1];
+  if(s[top.key]===s[second.key]&&s[top.key]>0)return `${top.short}・${second.short}寄り`;
+  if(s[top.key]>=5)return `${top.short}強め`;
+  if(values.filter(v=>v>0).length===4&&Math.max(...values)<=4)return "全体的に控えめ";
+  return `${top.short}寄り`;
 }
 function renderControls(c){
   $("scoreControls").innerHTML=AXES.map(a=>`<div class="score-row"><div class="score-row-head"><strong>${a.label}</strong><output id="out-${a.key}">${c.scores[a.key]}</output></div><input type="range" min="0" max="10" step="1" value="${c.scores[a.key]}" data-score="${a.key}" /></div>`).join("");
@@ -101,8 +133,16 @@ function renderControls(c){
 }
 function renderSummary(c){
   $("avgScore").textContent=avg(c);
-  const max=AXES.reduce((best,a)=>c.scores[a.key]>c.scores[best.key]?a:best,AXES[0]);
-  $("maxAxis").textContent=`${max.short} ${c.scores[max.key]}`; $("typeLabel").textContent=typeLabel(c);
+  const maxScore=Math.max(...AXES.map(a=>c.scores[a.key]));
+  const maxAxes=AXES.filter(a=>c.scores[a.key]===maxScore);
+  if(maxScore===0){
+    $("maxAxis").textContent="—";
+  }else if(maxAxes.length===4){
+    $("maxAxis").textContent=`全軸 ${maxScore}`;
+  }else{
+    $("maxAxis").textContent=`${maxAxes.map(a=>a.short).join("・")} ${maxScore}`;
+  }
+  $("typeLabel").textContent=typeLabel(c);
 }
 function renderJson(c){$("jsonPreview").textContent=JSON.stringify(c,null,2)}
 
