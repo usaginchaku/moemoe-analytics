@@ -333,7 +333,8 @@ function renderImage(c){
   if(!rawUrl){ wrap.classList.add("hidden"); img.removeAttribute("src"); err.classList.add("hidden"); return; }
   const displayUrl = resolveImageUrl(rawUrl);
   wrap.classList.remove("hidden"); err.classList.add("hidden"); img.alt = `${c.name} の画像`; img.referrerPolicy = "no-referrer";
-  img.onload = () => err.classList.add("hidden"); img.onerror = () => err.classList.remove("hidden"); img.src = displayUrl;
+  img.hidden = false;
+  img.onload = () => { img.hidden = false; err.classList.add("hidden"); }; img.onerror = () => { img.hidden = true; err.classList.remove("hidden"); }; img.src = displayUrl;
 }
 
 function bindField(id, key, transform = v => v){
